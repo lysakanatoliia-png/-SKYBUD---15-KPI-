@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKYBUD — Экономические показатели</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --bg-card: #FFFFFF;
+  --bg-surface: #F3F2EE;
+  --bg-hover: #EEEDEA;
+  --text-primary: #1A1A18;
+  --text-secondary: #6B6A65;
+  --text-tertiary: #9C9B95;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.15);
+  --teal-50: #E1F5EE; --teal-100: #9FE1CB; --teal-600: #0F6E56; --teal-800: #085041;
+  --blue-50: #E6F1FB; --blue-100: #B5D4F4; --blue-600: #185FA5; --blue-800: #0C447C;
+  --coral-50: #FAECE7; --coral-100: #F5C4B3; --coral-600: #993C1D; --coral-800: #712B13;
+  --purple-50: #EEEDFE; --purple-100: #CECBF6; --purple-600: #534AB7; --purple-800: #3C3489;
+  --amber-50: #FAEEDA; --amber-600: #854F0B; --amber-800: #633806;
+  --green-50: #EAF3DE; --green-600: #3B6D11; --green-800: #27500A;
+  --font: 'DM Sans', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413;
+    --bg-card: #1E1E1C;
+    --bg-surface: #252523;
+    --bg-hover: #2C2C29;
+    --text-primary: #E8E7E2;
+    --text-secondary: #9C9B95;
+    --text-tertiary: #6B6A65;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --teal-50: #04342C; --teal-100: #085041; --teal-600: #5DCAA5; --teal-800: #9FE1CB;
+    --blue-50: #042C53; --blue-100: #0C447C; --blue-600: #85B7EB; --blue-800: #B5D4F4;
+    --coral-50: #4A1B0C; --coral-100: #712B13; --coral-600: #F0997B; --coral-800: #F5C4B3;
+    --purple-50: #26215C; --purple-100: #3C3489; --purple-600: #AFA9EC; --purple-800: #CECBF6;
+    --amber-50: #412402; --amber-600: #EF9F27; --amber-800: #FAC775;
+    --green-50: #173404; --green-600: #97C459; --green-800: #C0DD97;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+.logo-accent { color: var(--teal-600); }
+.header-sub {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Flow chain */
+.flow-chain {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  justify-content: center;
+}
+.flow-step {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  padding: 4px 10px;
+  background: var(--bg-card);
+  border-radius: 6px;
+  border: 0.5px solid var(--border);
+  white-space: nowrap;
+}
+.flow-arr {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+
+/* Group sections */
+.group { margin-bottom: 2.5rem; }
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  padding-left: 2px;
+}
+.group-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.group-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.group-count {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* Card grid */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+.card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.card:hover {
+  border-color: var(--border-hover);
+}
+.card.expanded {
+  grid-column: 1 / -1;
+  border-color: var(--border-hover);
+}
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-num {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.card-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.card-short {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.card-toggle {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+.card.expanded .card-toggle { opacity: 0; }
+
+/* Detail panel */
+.card-detail {
+  display: none;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.card.expanded .card-detail { display: block; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 600px) {
+  .detail-grid { grid-template-columns: 1fr; }
+}
+
+.detail-block { margin-bottom: 0.25rem; }
+.detail-block.full { grid-column: 1 / -1; }
+.detail-label {
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.detail-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.detail-list {
+  list-style: none;
+  padding: 0;
+}
+.detail-list li {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  padding-left: 14px;
+  position: relative;
+}
+.detail-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+.formula-box {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  margin-top: 4px;
+  font-weight: 500;
+}
+.formula-box.teal { background: var(--teal-50); color: var(--teal-800); }
+.formula-box.blue { background: var(--blue-50); color: var(--blue-800); }
+.formula-box.coral { background: var(--coral-50); color: var(--coral-800); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">SKY<span class="logo-accent">BUD</span></div>
+    <div class="header-sub">15 ключевых экономических показателей</div>
+  </div>
+
+  <div class="flow-chain">
+    <span class="flow-step">Revenue</span><span class="flow-arr">→</span>
+    <span class="flow-step">− COGS</span><span class="flow-arr">=</span>
+    <span class="flow-step">Gross Profit</span><span class="flow-arr">→</span>
+    <span class="flow-step">− OPEX</span><span class="flow-arr">=</span>
+    <span class="flow-step">EBIT</span><span class="flow-arr">→</span>
+    <span class="flow-step">+ D&A</span><span class="flow-arr">=</span>
+    <span class="flow-step">EBITDA</span><span class="flow-arr">&nbsp;</span>
+    <span class="flow-step">EBIT − % − Tax</span><span class="flow-arr">=</span>
+    <span class="flow-step">Net Profit</span>
+  </div>
+
+  <div class="group">
+    <div class="group-header">
+      <div class="group-dot" style="background:var(--teal-600)"></div>
+      <span class="group-name">Доход и прибыльность</span>
+      <span class="group-count">8 показателей</span>
+    </div>
+    <div class="cards" id="g1"></div>
+  </div>
+
+  <div class="group">
+    <div class="group-header">
+      <div class="group-dot" style="background:var(--blue-600)"></div>
+      <span class="group-name">Структура и устойчивость</span>
+      <span class="group-count">6 показателей</span>
+    </div>
+    <div class="cards" id="g2"></div>
+  </div>
+
+  <div class="group">
+    <div class="group-header">
+      <div class="group-dot" style="background:var(--coral-600)"></div>
+      <span class="group-name">Планирование</span>
+      <span class="group-count">1 показатель</span>
+    </div>
+    <div class="cards" id="g3"></div>
+  </div>
+
+  <div class="footer">SKYBUD Engineering Services &middot; Справочник экономических показателей</div>
+</div>
+
+<script>
+const kpis = [
+  {
+    g:1, n:1, name:"EBITDA",
+    short:"Прибыль от основной деятельности до процентов, налогов, амортизации и износа.",
+    formula:"EBIT + D&A",
+    formulaAlt:"Чистая прибыль + Налог на прибыль + Проценты + D&A",
+    source:["Отчёт о прибылях и убытках","Данные об амортизации","Налоги","Проценты по кредитам"],
+    why:["Оценить операционную силу бизнеса","Понять, сколько бизнес зарабатывает «на работе»","Сравнивать бизнес с другими компаниями"],
+    color:"teal"
+  },
+  {
+    g:1, n:2, name:"Выручка (Revenue)",
+    short:"Все деньги от продажи товаров или услуг за период.",
+    formula:"Σ(Цена × Количество)",
+    source:["Счета клиентам","Договоры","Акты / закрытия работ","Банковские поступления","CRM / реестр продаж"],
+    why:["Видеть масштаб продаж","Отслеживать рост или падение бизнеса","Использовать как базу для маржи, прибыльности и точки безубыточности"],
+    color:"teal"
+  },
+  {
+    g:1, n:3, name:"Себестоимость (COGS)",
+    short:"Прямые затраты, связанные с производством или выполнением работ.",
+    formula:"Материалы + Прямая зарплата + Прямые накладные",
+    source:["Закупки материалов","Зарплата бригад / прямые трудозатраты","Акты субподрядчиков","Реестр затрат по проекту"],
+    why:["Понимать, сколько реально стоит выполнение работы","Контролировать затраты производства","Видеть, что «съедает» маржу"],
+    color:"teal"
+  },
+  {
+    g:1, n:4, name:"Валовая прибыль (Gross Profit)",
+    short:"Сколько остаётся после вычета себестоимости из выручки.",
+    formula:"Revenue − COGS",
+    source:["Revenue","COGS"],
+    why:["Оценить выгодность продукта или услуги","Понять, зарабатывает ли бизнес на своей основной работе","Увидеть базу для маржи и прибыли"],
+    color:"teal"
+  },
+  {
+    g:1, n:5, name:"Операционные расходы (OPEX)",
+    short:"Расходы на управление и поддержку бизнеса, не входящие в прямую себестоимость.",
+    formula:"SG&A + прочие операционные расходы",
+    source:["Аренда","Офисные расходы","Маркетинг","Административные зарплаты","Софт, связь, бухгалтерия, юридические услуги"],
+    why:["Контролировать постоянные расходы","Искать, где можно оптимизировать затраты","Понимать, не «съедает» ли управление всю прибыль"],
+    color:"teal"
+  },
+  {
+    g:1, n:6, name:"Операционная прибыль (EBIT)",
+    short:"Прибыль от основной деятельности до процентов и налогов.",
+    formula:"Revenue − COGS − OPEX − Амортизация",
+    source:["Revenue","COGS","OPEX","Амортизация"],
+    why:["Оценить эффективность операционной модели","Увидеть качество бизнеса без влияния кредитов и налогов","Понять, насколько эффективно работает управление"],
+    color:"teal"
+  },
+  {
+    g:1, n:7, name:"Чистая прибыль (Net Profit)",
+    short:"Конечная прибыль после всех расходов, процентов и налогов.",
+    formula:"EBIT − Проценты − Налоги ± прочие доходы/расходы",
+    source:["EBIT","Проценты по кредитам","Налоги","Прочие доходы / расходы"],
+    why:["Понять, сколько реально осталось собственнику","Оценить конечную выгоду бизнеса","Использовать для анализа рентабельности"],
+    color:"teal"
+  },
+  {
+    g:1, n:8, name:"Рентабельность продаж",
+    short:"Какая доля чистой прибыли приходится на выручку.",
+    formula:"Net Profit / Revenue × 100%",
+    source:["Net Profit","Revenue"],
+    why:["Сравнивать эффективность по периодам","Оценивать, насколько «выгодны» продажи","Видеть не просто оборот, а качество этого оборота"],
+    color:"teal"
+  },
+  {
+    g:2, n:9, name:"Структура затрат",
+    short:"Как распределяются затраты: постоянные, переменные, прямые, косвенные, по категориям.",
+    formula:"Переменные = зависят от объёма; Постоянные = условно постоянные",
+    source:["Реестр всех затрат","OPEX","COGS","Классификация затрат по категориям"],
+    why:["Понять, куда идут деньги","Искать экономию","Прогнозировать прибыль при изменении объёма продаж или работ"],
+    color:"blue"
+  },
+  {
+    g:2, n:10, name:"Текущая ликвидность",
+    short:"Хватает ли компании краткосрочных активов для покрытия краткосрочных обязательств.",
+    formula:"Оборотные активы / Краткосрочные обязательства",
+    source:["Деньги на счетах","Дебиторка","Запасы","Краткосрочные долги","Кредиторка","Налоговые обязательства"],
+    why:["Контролировать риск кассовых разрывов","Видеть, может ли компания оплачивать текущие счета","Понимать краткосрочную финансовую устойчивость"],
+    color:"blue"
+  },
+  {
+    g:2, n:11, name:"Денежный поток (OCF)",
+    short:"Сколько денег бизнес реально генерирует от операционной деятельности.",
+    formula:"EBITDA − ΔОборотный капитал − Налоги",
+    source:["Фактические клиентские поступления","Операционные выплаты","Изменение дебиторки","Изменение кредиторки","Налоговые платежи"],
+    why:["Понимать, генерирует ли бизнес реальные деньги","Видеть, хватает ли средств на зарплаты, налоги, закупки","Не путать прибыль «на бумаге» с реальными деньгами"],
+    color:"blue"
+  },
+  {
+    g:2, n:12, name:"Активы (Assets)",
+    short:"Всё, чем владеет компания: деньги, оборудование, запасы, дебиторка и т.д.",
+    formula:"Оборотные активы + Необоротные активы",
+    source:["Деньги на счетах","Дебиторка","Запасы","Оборудование","Прочие активы"],
+    why:["Оценить ресурсную базу бизнеса","Понять структуру имущества компании","Видеть, на чём держится устойчивость бизнеса"],
+    color:"blue"
+  },
+  {
+    g:2, n:13, name:"Обязательства (Liabilities)",
+    short:"Все долги и финансовые обязательства компании.",
+    formula:"Краткосрочные + Долгосрочные обязательства",
+    source:["Кредиторка поставщикам","Кредиты","Налоговые долги","Начисленные, но не оплаченные расходы"],
+    why:["Оценить долговую нагрузку","Понимать риск неплатёжеспособности","Видеть общую финансовую напряжённость бизнеса"],
+    color:"blue"
+  },
+  {
+    g:2, n:14, name:"Собственный капитал (Equity)",
+    short:"Часть стоимости бизнеса, которая реально принадлежит собственнику после вычета всех обязательств.",
+    formula:"Assets − Liabilities",
+    source:["Активы","Обязательства","Взносы собственника","Накопленная прибыль"],
+    why:["Оценить финансовую устойчивость и независимость бизнеса","Понять, какой «запас прочности» есть у компании","Видеть реальную стоимость, принадлежащую собственнику"],
+    color:"blue"
+  },
+  {
+    g:3, n:15, name:"Точка безубыточности (Break-even)",
+    short:"Какой минимальный объём продаж или работ нужен, чтобы компания не работала в минус.",
+    formula:"Постоянные затраты / (Цена − Переменные на единицу)",
+    source:["Постоянные затраты","Переменные затраты","Цена / доход на единицу или проект","Валовая маржа"],
+    why:["Понимать минимально необходимый объём продаж","Планировать безопасный уровень работы","Видеть, ниже какого уровня компания начинает генерировать убыток"],
+    color:"coral"
+  }
+];
+
+function renderGroup(groupId, containerId) {
+  const container = document.getElementById(containerId);
+  const items = kpis.filter(k => k.g === groupId);
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.addEventListener('click', () => {
+      const wasExpanded = card.classList.contains('expanded');
+      document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove('expanded'));
+      if (!wasExpanded) {
+        card.classList.add('expanded');
+        setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+      }
+    });
+
+    const sourceHtml = item.source.map(s => `<li>${s}</li>`).join('');
+    const whyHtml = item.why.map(w => `<li>${w}</li>`).join('');
+    const altFormula = item.formulaAlt ? `<br><span style="font-size:0.72rem;color:var(--text-tertiary);font-family:var(--font)">или</span><br><span class="formula-box ${item.color}" style="margin-top:4px">${item.formulaAlt}</span>` : '';
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="card-name">${item.name}</div>
+          <div class="card-short">${item.short}</div>
+          <div class="card-toggle">нажмите для подробностей</div>
+        </div>
+        <div class="card-num">#${String(item.n).padStart(2,'0')}</div>
+      </div>
+      <div class="card-detail">
+        <div class="detail-grid">
+          <div class="detail-block">
+            <div class="detail-label">Формула</div>
+            <span class="formula-box ${item.color}">${item.formula}</span>
+            ${altFormula}
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Откуда данные</div>
+            <ul class="detail-list">${sourceHtml}</ul>
+          </div>
+          <div class="detail-block full">
+            <div class="detail-label">Для чего нужен</div>
+            <ul class="detail-list">${whyHtml}</ul>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+renderGroup(1, 'g1');
+renderGroup(2, 'g2');
+renderGroup(3, 'g3');
+</script>
+</body>
+</html>
